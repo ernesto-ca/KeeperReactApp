@@ -1,25 +1,39 @@
-import React from "react";
-import Header from "./Header";
-import Footer from "./Footer";
-import Notes from "./Note";
-import notes from "../Notes";
+import React, { useState } from 'react';
+import Header from './Header';
+import Footer from './Footer';
+import NoteItem from './NoteItem';
+import InputArea from './InputArea';
 
+function App() {
+    const [items, setItems] = useState([]);
 
-function createCards(note){
+    function addItem(newNote) {
+        setItems((prevItems) => {
+            return [...prevItems, newNote];
+        });
+    }
+
+    function deleteItem(id) {
+        setItems((prevItems) => {
+            return prevItems.filter((item, index) => {
+                return index !== id;
+            });
+        });
+    }
+
     return (
-        <Notes 
-            key = {note.title}
-            title = {note.title}
-            content={note.content}
-        />
-    )
-}
-
-function App(){
-    return(
         <div>
             <Header />
-            {notes.map(createCards)}
+            <InputArea add={addItem} />
+            {items.map((noteItem, index) => (
+                <NoteItem
+                    key={index}
+                    id={index}
+                    title={noteItem.title}
+                    content={noteItem.content}
+                    onDelete={deleteItem}
+                />
+            ))}
             <Footer />
         </div>
     );
